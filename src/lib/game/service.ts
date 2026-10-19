@@ -79,11 +79,6 @@ function setSize(snap: SetSnapshot) {
   return snap.cards.length;
 }
 
-/** Tailles exactes (snapshots, en cache dès qu'un set a été ouvert) */
-async function obtainableTotals(setIds: string[]) {
-  const snaps = await Promise.all(setIds.map((id) => getSetSnapshot(id).catch(() => null)));
-  return new Map(snaps.filter((s): s is SetSnapshot => s !== null).map((s) => [s.id, setSize(s)]));
-}
 
 export async function getOwnedBySet(userId: string) {
   const cards = await store().getUserCards(userId);
@@ -97,10 +92,10 @@ export async function getOwnedBySet(userId: string) {
 
 export async function getCollectionOverview(userId: string): Promise<SetProgress[]> {
   const [sets, bySet] = await Promise.all([getPlayableSets(), getOwnedBySet(userId)]);
-  const totals = await obtainableTotals(sets.filter((s) => bySet.has(s.id)).map((s) => s.id));
+  // Le total du set (sous-sets compris) est déjà connu : inutile de recharger toutes ses cartes
   return sets.map((s) => {
     const owned = bySet.get(s.id)?.length ?? 0;
-    const total = totals.get(s.id) ?? s.total;
+    const total = s.total;
     return { setId: s.id, owned, total, percent: total ? Math.floor((owned / total) * 100) : 0 };
   });
 }
@@ -236,7 +231,6 @@ export interface LeaderboardEntry {
 export async function getLeaderboard(): Promise<LeaderboardEntry[]> {
   const [rows, sets] = await Promise.all([store().leaderboardRows(), getPlayableSets()]);
   const sizes = new Map(sets.map((s) => [s.id, s.total]));
-  for (const [id, n] of await obtainableTotals([...new Set(rows.map((r) => r.setId))])) sizes.set(id, n);
   const users = new Map<string, Omit<LeaderboardEntry, "username" | "avatar">>();
   for (const r of rows) {
     const u = users.get(r.userId) ?? { userId: r.userId, unique: 0, total: 0, setsCompleted: 0 };
