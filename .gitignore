@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# données locales (mode démo + cache TCGdex)
+/.data/
+!.env.example

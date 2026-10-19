@@ -1,0 +1,17 @@
+Déposez ici les visuels de boosters : un fichier par catégorie de booster, nommé avec son id :
+
+  me.webp      Méga-Évolution            hgss.webp   HeartGold SoulSilver
+  sv.webp      Écarlate et Violet        pl.webp     Platine
+  swsh.webp    Épée et Bouclier          dp.webp     Diamant & Perle
+  sm.webp      Soleil et Lune            ex.webp     EX
+  xy.webp      XY                        ecard.webp  e-Card
+  bw.webp      Noir & Blanc              neo.webp    Neo
+  base.webp    Set de Base               gym.webp    Gym
+  tcgp.webp    Pokémon TCG Pocket        special.webp  Promos & collections
+
+(l'id est aussi visible dans l'URL /ouvrir/<id>). Formats : .webp, .png, .jpg, .avif.
+Format conseillé : portrait, ratio ~5:8.2 (ex. 500×820).
+Le script scripts/pack-art.mjs les référence automatiquement au lancement (npm run dev / build).
+
+Attention : les visuels officiels appartiennent à The Pokémon Company / Nintendo.
+N'utilisez que des images que vous avez le droit d'utiliser.
